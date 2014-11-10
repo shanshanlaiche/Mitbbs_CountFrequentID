@@ -20,9 +20,9 @@ from CountFrequentID_Input import *
 # find the most TopN frequent post author from IDList
 #if the total author count is less than TopN, return all the author's ID
 def FindRecentFrequentID(IDList, TopN):
-    IDCount = {}
+    IDCount = {} # a dictionary to use ID as key and the appearing time as value
     for i in range(len(IDList)):
-        IDCount[IDList[i]] = 0
+        IDCount[IDList[i]] = 0 # set initial count to zero
     for i in range(len(IDList)):
         IDCount[IDList[i]] = IDCount[IDList[i]] + 1
 
@@ -72,8 +72,6 @@ for i in range(int(len(author_initial)/2)):
 
 for i in range(len(author_initial)):
     author_initial[i] = author_initial[i].text # get the ID string 
-
-
     
 ID = FindRecentFrequentID(author_initial, TopN)
 
