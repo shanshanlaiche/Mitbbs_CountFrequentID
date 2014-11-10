@@ -5,7 +5,6 @@ Combine the current list with all previous list
 Previous list was stored in "CountFrequentID_Output"
 Input parameters are stored in "CountFrequentID_Input"
 Now, it only works for Firefox browser!!!
-Stored in "HistoricalFrequentID.py"
 
 
 Author: babyrabbit_che(wechat)
