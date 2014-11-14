@@ -1,8 +1,18 @@
+"""
+Count the most recent "RecentMonth" months first "TopN" most frequent post author
+Stored in "MostRecentFrequentID.py"
+Combine the current list with all previous list
+Previous list was stored in "CountFrequentID_Output"
+Input parameters are stored in "CountFrequentID_Input"
+
+
+Author: babyrabbit_che(wechat)
+Packages used: 1. BeautifulSoup (pip install BeautifulSoup);2. requests
+"""
 import re, sys
 from bs4 import BeautifulSoup
 import requests
 from CountFrequentID_Input import *
-#from CountFrequentID import FindRecentFrequentID
 
 # find the most TopN frequent post author from IDList
 #if the total author count is less than TopN, return all the author's ID
