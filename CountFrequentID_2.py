@@ -1,21 +1,8 @@
-"""
-Count the most recent "RecentMonth" months first "TopN" most frequent post author
-Stored in "MostRecentFrequentID.py"
-Combine the current list with all previous list
-Previous list was stored in "CountFrequentID_Output"
-Input parameters are stored in "CountFrequentID_Input"
-Now, it only works for Firefox browser!!!
-
-
-Author: babyrabbit_che(wechat)
-Packages used: 1. Selenium (pip install Selenium)
-"""
-from datetime import date
-import datetime
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+import re, sys
+from bs4 import BeautifulSoup
+import requests
 from CountFrequentID_Input import *
-
+#from CountFrequentID import FindRecentFrequentID
 
 # find the most TopN frequent post author from IDList
 #if the total author count is less than TopN, return all the author's ID
@@ -32,8 +19,8 @@ def FindRecentFrequentID(IDList, TopN):
     return RecentFrequentID # a List of most TopN frequent post author
 
 ###### main project  ######################################
-
 def CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth):
+
     OutPutList = open('CountFrequentID_Output.py', 'r+')
     HistoricalID = []
     for line in OutPutList:
@@ -44,39 +31,18 @@ def CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth
 
     URL = "http://www.mitbbs.com/mitbbs_bbsbfind.php?board=" + Board  
 
-    if Browser == "Firefox":
-        driver = webdriver.Firefox()
-    elif Browser == "Chrome":
-        driver = webdriver.Chrome()
-    elif Browser == "Ie":
-        driver = webdriver.Ie()
-    else:
-        print ('Please choose a valid explorer')
-        
-    if Today == "Yes":
-        Year = (datetime.date.today()).year
-        Month =(datetime.date.today()).month
-        Day = (datetime.date.today()).day
+    form_data = {'submit':"递交查询结果", 'dt' : '1'}
+    session = requests.session()
+    r = session.post(URL, data=form_data, verify = False)
+    r.encoding = "gb2312"
+    soup = BeautifulSoup(r.text)
 
-    RecentDays = (date(Year, Month, Day) - date(Year, Month - RecentMonth, Day)).days
-    driver.get(URL)
-    elem = driver.find_element_by_name("dt")
-    elem.send_keys(Keys.BACK_SPACE)
-    elem.send_keys(RecentDays)
-    elem.send_keys(Keys.RETURN)
-
-    # read in the author and the title of each article
-    author_initial = driver.find_elements_by_class_name("news1")
-
+    author_initial = [u.text for u in soup.findAll('a', class_='news1')]
 
     for i in range(int(len(author_initial)/2)):
-        del author_initial[i+1] # clean the list, only the author name left
+          del author_initial[i+1] # clean the list, only the author name left
 
-    for i in range(len(author_initial)):
-        author_initial[i] = author_initial[i].text # get the ID string 
-        
     ID = FindRecentFrequentID(author_initial, TopN)
-
     for i in range(len(ID)):
         HistoricalID.add(ID[i])
         
@@ -88,7 +54,5 @@ def CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth
     OutPutList.writelines(OutPutIDList)
 
     OutPutList.close()
-    driver.close()
 
 CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth)
-
