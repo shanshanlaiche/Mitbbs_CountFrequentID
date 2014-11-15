@@ -59,10 +59,16 @@ def CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth
         Day = (datetime.date.today()).day
 
     RecentDays = (date(Year, Month, Day) - date(Year, Month - RecentMonth, Day)).days
-    driver.get(URL)
+    driver.get(URL)# fill the date and days; hit Enter
     elem = driver.find_element_by_name("dt")
     elem.send_keys(Keys.BACK_SPACE)
     elem.send_keys(RecentDays)
+    elem = driver.find_element_by_name("year")
+    elem.send_keys(Year)
+    elem = driver.find_element_by_name("month")
+    elem.send_keys(Month)
+    elem = driver.find_element_by_name("day")
+    elem.send_keys(Day)
     elem.send_keys(Keys.RETURN)
 
     # read in the author and the title of each article
