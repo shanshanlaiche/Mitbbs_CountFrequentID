@@ -9,6 +9,8 @@ Input parameters are stored in "CountFrequentID_Input"
 Author: babyrabbit_che(wechat)
 Packages used: 1. BeautifulSoup (pip install BeautifulSoup);2. requests
 """
+from datetime import date
+import datetime
 import re, sys
 from bs4 import BeautifulSoup
 import requests
@@ -39,9 +41,17 @@ def CountFrequentyID (Board, Browser, TopN, Today, Year, Month, Day, RecentMonth
     OutPutList.close()
     OutPutList = open('CountFrequentID_Output.py', 'w')
 
+    if Today == "Yes":
+        Year = (datetime.date.today()).year
+        Month =(datetime.date.today()).month
+        Day = (datetime.date.today()).day
+
+    RecentDays = (date(Year, Month, Day) - date(Year, Month - RecentMonth, Day)).days
+
     URL = "http://www.mitbbs.com/mitbbs_bbsbfind.php?board=" + Board  
 
-    form_data = {'submit':"递交查询结果", 'dt' : '1'}
+    form_data = {'submit':"递交查询结果", 'dt' : str(RecentDays), 'year':str(Year),
+                 'month':str(Month), 'day':str(Day)}
     session = requests.session()
     r = session.post(URL, data=form_data, verify = False)
     r.encoding = "gb2312"
